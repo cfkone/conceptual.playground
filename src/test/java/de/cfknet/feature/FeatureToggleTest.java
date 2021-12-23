@@ -1,14 +1,12 @@
 package de.cfknet.feature;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
-
-import de.cfknet.feature.FeatureToggle;
 
 class FeatureToggleTest {
 
@@ -47,7 +45,7 @@ class FeatureToggleTest {
 		NewService newService = new NewService();
 
 		boolean featureEnable = true;
-		String value = this.featureToggle(newService, oldService, featureEnable);
+		String value = featureToggle(newService, oldService, featureEnable);
 
 		assertThat(value, is("Hello World"));
 	}
@@ -59,7 +57,7 @@ class FeatureToggleTest {
 		NewService newService = new NewService();
 
 		boolean featureEnable = false;
-		String value = this.featureToggle(newService, oldService, featureEnable);
+		String value = featureToggle(newService, oldService, featureEnable);
 
 		assertThat(value, is("Say good bye"));
 	}
@@ -84,11 +82,11 @@ class FeatureToggleTest {
 	}
 
 	private String featureToggle(NewService newService, OldService oldService, boolean featureEnable) {
-		FeatureToggle.of(() -> this.value = newService.doStuff())
+		FeatureToggle.of(() -> value = newService.doStuff())
 				.flag(() -> featureEnable)
-				.orElseGet(() -> this.value = oldService.doStuff())
+				.orElseGet(() -> value = oldService.doStuff())
 				.execute();
-		return this.value;
+		return value;
 	}
 
 }
