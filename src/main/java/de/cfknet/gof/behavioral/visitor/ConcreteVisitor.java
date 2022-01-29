@@ -1,6 +1,6 @@
 package de.cfknet.gof.behavioral.visitor;
 
-final class ConcreteVisitor implements Switch {
+final class ConcreteVisitor implements Switch<String> {
 
 	private String value;
 
@@ -14,7 +14,9 @@ final class ConcreteVisitor implements Switch {
 		value = elementB.doStuff();
 	}
 
-	public String getValue() {
+	@Override
+	public String get() {
 		return value;
 	}
+
 }

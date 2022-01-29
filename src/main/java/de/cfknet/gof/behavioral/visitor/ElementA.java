@@ -1,8 +1,7 @@
 package de.cfknet.gof.behavioral.visitor;
 
-final class ElementA implements Element {
+final class ElementA implements Visitable<String> {
 
-	@Override
 	public String doStuff() {
 		return "Hello";
 	}
@@ -12,7 +11,7 @@ final class ElementA implements Element {
 	}
 
 	@Override
-	public void accept(Switch visitor) {
+	public void accept(Switch<String> visitor) {
 		visitor.visit(this);
 	}
 }

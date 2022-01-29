@@ -2,7 +2,7 @@ package de.cfknet.gof.behavioral.visitor;
 
 /**
  * The {@link Handler} is a container for handling the different
- * {@link Element}<br/>
+ * {@link Visitable}<br/>
  * implementations by using {@link Visitor}
  *
  * @author cfk
@@ -10,6 +10,6 @@ package de.cfknet.gof.behavioral.visitor;
  * @param <T>
  */
 @FunctionalInterface
-public interface Handler<T extends Element> {
-	void handle(T element);
+public interface Handler<T extends Visitable, R> {
+	R handle(T element);
 }
