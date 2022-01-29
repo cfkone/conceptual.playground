@@ -1,7 +1,7 @@
 package de.cfknet.gof.behavioral.visitor;
 
 public interface Element {
-	void accept(Visitor visitor);
+	void accept(Switch visitor);
 
 	String doStuff();
 }

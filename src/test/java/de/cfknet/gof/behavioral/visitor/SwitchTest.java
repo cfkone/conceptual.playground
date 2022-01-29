@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
 
-class VisitorTest {
+class SwitchTest {
 
 	@Test
 	void stringVisitor() {
@@ -20,10 +20,9 @@ class VisitorTest {
 
 	@Test
 	void visitorFactoryBoth() throws Exception {
-		Visitor visitor = VisitorFactory.builder()
+		Visitor visitor = Visitor.with()
 				.handlerA(element -> assertThat(element.doAStuff(), is("Foo")))
 				.handlerB(element -> assertThat(element.doBStuff(), is("Bar")))
-				.build()
 				.get();
 
 		ElementA elementA = new ElementA();
@@ -35,9 +34,8 @@ class VisitorTest {
 
 	@Test
 	void visitorFactoryOnlyA() throws Exception {
-		Visitor visitor = VisitorFactory.builder()
+		Visitor visitor = Visitor.with()
 				.handlerA(element -> assertThat(element.doAStuff(), is("Foo")))
-				.build()
 				.get();
 
 		ElementA elementA = new ElementA();
@@ -49,9 +47,8 @@ class VisitorTest {
 
 	@Test
 	void visitorFactoryOnlyB() throws Exception {
-		Visitor visitor = VisitorFactory.builder()
+		Visitor visitor = Visitor.with()
 				.handlerB(element -> assertThat(element.doBStuff(), is("Bar")))
-				.build()
 				.get();
 
 		ElementA elementA = new ElementA();

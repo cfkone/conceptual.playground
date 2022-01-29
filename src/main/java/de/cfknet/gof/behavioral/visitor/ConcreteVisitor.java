@@ -1,6 +1,6 @@
 package de.cfknet.gof.behavioral.visitor;
 
-final class ConcreteVisitor implements Visitor {
+final class ConcreteVisitor implements Switch {
 
 	private String value;
 

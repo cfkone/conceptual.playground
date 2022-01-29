@@ -12,7 +12,7 @@ final class ElementA implements Element {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(Switch visitor) {
 		visitor.visit(this);
 	}
 }
