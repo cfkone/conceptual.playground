@@ -8,14 +8,10 @@ import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(staticName = "with")
-public class SelfToggledFeature<C> {
+public final class SelfToggledFeature<C> {
 
 	private final Supplier<C> criteria;
-	private final Predicate<C> isFeatureEnabled;
-
-	private boolean isEnabled() {
-		return isFeatureEnabled.test(criteria.get());
-	}
+	private final Predicate<C> isEnabled;
 
 	public <T> void acceptIfEnabled(final T input, final Consumer<T> consumer) {
 		if (isEnabled()) {
@@ -31,11 +27,15 @@ public class SelfToggledFeature<C> {
 		return Optional.empty();
 	}
 
-	public <T, R> Optional<R> getIfEnabled(final Supplier<R> supplier) {
+	public <R> Optional<R> getIfEnabled(final Supplier<R> supplier) {
 		if (isEnabled()) {
 			R result = supplier.get();
 			return Optional.ofNullable(result);
 		}
 		return Optional.empty();
+	}
+
+	private boolean isEnabled() {
+		return isEnabled.test(criteria.get());
 	}
 }
