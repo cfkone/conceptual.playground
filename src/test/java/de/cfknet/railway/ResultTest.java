@@ -6,13 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.NoSuchElementException;
-
 import org.junit.jupiter.api.Test;
 
 class ResultTest {
 
 	@Test
-	void success() throws Exception {
+	void onSuccess_consumer() throws Exception {
 		Result<String, Object> success = Result.success("Foo");
 		success.onSuccess(t -> assertThat(t, is("Foo")))
 				.onFailure(t -> fail("should not be executed"));
@@ -22,12 +21,55 @@ class ResultTest {
 	}
 
 	@Test
+	void onSuccess_supplier() throws Exception {
+		Result<String, Object> success = Result.success("Foo");
+		Result<String, Object> onSuccess = success.onSuccess(() -> "FooBar")
+				.onFailure(f -> fail("should not be executed"));
+
+		assertThat(onSuccess.isSuccess(), is(true));
+		assertThat(onSuccess.getS(), is("FooBar"));
+		assertThrows(NoSuchElementException.class, () -> onSuccess.getF());
+	}
+
+	@Test
+	void onSuccess_supplier_but_is_failure() throws Exception {
+		Result<String, Object> success = Result.failure("Foo");
+		Result<String, Object> onSuccess = success.onSuccess(() -> "FooBar")
+				.onFailure(f -> assertThat(f, is("Foo")));
+
+		assertThat(onSuccess.isSuccess(), is(false));
+		assertThat(onSuccess.getF(), is("Foo"));
+		assertThrows(NoSuchElementException.class, () -> onSuccess.getS());
+	}
+
+	@Test
+	void onFailure_supplier() throws Exception {
+		Result<String, String> failure = Result.failure("Foo");
+		Result<String, String> onSuccess = failure.onFailure(() -> "FooBar");
+
+		assertThat(onSuccess.isSuccess(), is(false));
+		assertThat(onSuccess.getF(), is("FooBar"));
+		assertThrows(NoSuchElementException.class, () -> onSuccess.getS());
+	}
+
+	@Test
+	void onFailure_supplier_but_is_succes() throws Exception {
+		Result<String, String> failure = Result.success("Foo");
+		Result<String, String> onFailure = failure.onFailure(() -> "FooBar")
+				.onSuccess(s -> assertThat(s, is("Foo")));
+
+		assertThat(onFailure.isSuccess(), is(true));
+		assertThat(onFailure.getS(), is("Foo"));
+		assertThrows(NoSuchElementException.class, () -> onFailure.getF());
+	}
+
+	@Test
 	void success_but_no_value() throws Exception {
 		assertThrows(NullPointerException.class, () -> Result.success(null));
 	}
 
 	@Test
-	void failure() throws Exception {
+	void onFailure_consumer() throws Exception {
 		Result<Object, String> failure = Result.failure("Ups");
 		failure.onSuccess(t -> fail("should not be executed"))
 				.onFailure(t -> assertThat(t, is("Ups")));

@@ -4,13 +4,15 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
  * A result interface to handle success and failure of any workflow
  * <p/>
- * you can handle your own workflow by using the boolean methods and get the related values<br/>
+ * you can handle your own workflow by using the boolean methods and get the
+ * related values<br/>
  * or you use the onSuccess/onFailure methods (also in a fluent way if you like)
  *
  * @param <S> the value type if succeeded
@@ -28,7 +30,8 @@ public abstract class Result<S, F> {
 	 * @return {@link Result} of S and F
 	 */
 	public static <S, F> Result<S, F> success(@NonNull final S s) {
-		return new Result<S, F>(s, null) {};
+		return new Result<S, F>(s, null) {
+		};
 	}
 
 	/**
@@ -141,6 +144,32 @@ public abstract class Result<S, F> {
 			consumer.accept(getF());
 		}
 		return this;
+	}
+
+	/**
+	 * Get {@link Supplier} on succes
+	 *
+	 * @param supplier {@link Supplier} of R
+	 * @return {@link Result}
+	 */
+	public <R> Result<R, F> onSuccess(final Supplier<R> supplier) {
+		if (isSuccess()) {
+			return Result.success(supplier.get());
+		}
+		return Result.failure(getF());
+	}
+
+	/**
+	 * Get {@link Supplier} on failure
+	 *
+	 * @param supplier {@link Supplier} of R
+	 * @return {@link Result}
+	 */
+	public <R> Result<S, R> onFailure(final Supplier<R> supplier) {
+		if (isFailure()) {
+			return Result.failure(supplier.get());
+		}
+		return Result.success(getS());
 	}
 
 	/**
